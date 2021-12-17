@@ -9,6 +9,17 @@ export const LOG_LEVEL = {
   SILLY: 5,
 };
 
+export interface I2StringOptions {
+  msg?: string;
+  logData?: boolean;
+}
+
+export interface I2JsonOptions {
+  payload?: object;
+  withStack?: boolean;
+  withData?: boolean;
+}
+
 export abstract class BaseError extends Error {
   code?: number;
   name = 'BaseError';
@@ -53,7 +64,7 @@ export abstract class BaseError extends Error {
    * Used to log
    * @returns
    */
-  toString({ msg = '', logData = false } = {}) {
+  toString({ msg = '', logData = false }: I2StringOptions = {}) {
     const tag = this.getTag();
     return [tag ? `[${tag}]` : '', msg || this.getMsg(), logData ? 'data: ' + JSON.stringify(this.getData() || '') : '']
       .filter((v) => v !== undefined && JSON.stringify(v.trim()) !== '')
@@ -64,7 +75,7 @@ export abstract class BaseError extends Error {
    * Used to return api error / log
    * @returns
    */
-  toJSON({ payload = {}, withStack = false, withData = true } = {}) {
+  toJSON({ payload = {}, withStack = false, withData = true }: I2JsonOptions = {}) {
     const stack = withStack && this.stack ? { stack: this.stack } : {};
     const data = this.getData();
     return {

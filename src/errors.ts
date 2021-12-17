@@ -19,6 +19,12 @@ export class RequestError extends RevealableError {
   message = 'Wrong Request';
 }
 
+export class ArgumentError extends RequestError {
+  code = 21;
+  name = 'ArgumentError';
+  message = 'Argument Error';
+}
+
 export class NotFoundError extends RevealableError {
   code = 4;
   name = 'NotFoundError';
@@ -29,6 +35,30 @@ export class AuthError extends RevealableError {
   code = 5;
   name = 'AuthError';
   message = 'Auth Error';
+}
+
+export class NeedLoginError extends AuthError {
+  code = 51;
+  name = 'NeedLoginError';
+  message = 'Need Login Token';
+}
+
+export class UserBannedError extends AuthError {
+  code = 52;
+  name = 'UserBannedError';
+  message = 'User is been Banned!';
+}
+
+export class RoleNotAllowedError extends AuthError {
+  code = 53;
+  name = 'RoleNotAllowedError';
+  message = 'Need Login Token';
+}
+
+export class NotAllowedObjectError extends AuthError {
+  code = 54;
+  name = 'RoleNotAllowedError';
+  message = 'Need Login Token';
 }
 
 export class ServerError extends RevealableError {
