@@ -7,14 +7,14 @@ export const LOG_LEVEL = {
   VERBOSE: 3,
   DEBUG: 4,
   SILLY: 5,
-}
+};
 
 export abstract class BaseError extends Error {
   code?: number;
   name = 'BaseError';
   message = '';
   data?: unknown;
-  logLevel = LOG_LEVEL.ERROR
+  logLevel = LOG_LEVEL.ERROR;
 
   constructor(message?: string) {
     super(message);
@@ -35,46 +35,44 @@ export abstract class BaseError extends Error {
 
   /**
    * Used to show msg to the user
-   * @returns 
+   * @returns
    */
   getMsg() {
-    return this.message
+    return this.message;
   }
 
   getData() {
-    return this.data
+    return this.data;
   }
 
   getTag() {
-    return [this.code || '', this.name].join(":")
+    return [this.code || '', this.name].join(':');
   }
 
   /**
    * Used to log
-   * @returns 
+   * @returns
    */
-  toString({msg="", logData=false} = {}) {
-    const tag = this.getTag()
-    return [
-      tag ? `[${tag}]` : '',
-      msg || this.getMsg(),
-      logData ? ('data: ' + JSON.stringify(this.getData() || '')) : ''
-    ].filter(v => v !== undefined && JSON.stringify(v.trim()) !== '').join(' ')
+  toString({ msg = '', logData = false } = {}) {
+    const tag = this.getTag();
+    return [tag ? `[${tag}]` : '', msg || this.getMsg(), logData ? 'data: ' + JSON.stringify(this.getData() || '') : '']
+      .filter((v) => v !== undefined && JSON.stringify(v.trim()) !== '')
+      .join(' ');
   }
 
   /**
    * Used to return api error / log
-   * @returns 
+   * @returns
    */
-  toJSON({payload = {}, withStack = false, withData = true} = {}) {
-    const stack = (withStack && this.stack) ? { stack: this.stack } : {}
-    const data = this.getData()
+  toJSON({ payload = {}, withStack = false, withData = true } = {}) {
+    const stack = withStack && this.stack ? { stack: this.stack } : {};
+    const data = this.getData();
     return {
       errCode: this.code,
       errType: this.name,
       errMsg: this.getMsg() || this.message,
       ...payload,
-      ...((withData && data) ? { data } : {}),
+      ...(withData && data ? { data } : {}),
       ...stack,
     };
   }

@@ -16,16 +16,16 @@ export type TCatchErrorConfig = {
   throwServerError?: boolean;
 };
 
-export const catchError = async (inner: CallableFunction, { 
-  logAll, logUncaught, logFailure, logReasonable, 
-  logUnreasonable, throwServerError 
-}: TCatchErrorConfig = {}) => {
+export const catchError = async (
+  inner: CallableFunction,
+  { logAll, logUncaught, logFailure, logReasonable, logUnreasonable, throwServerError }: TCatchErrorConfig = {},
+) => {
   try {
     return await inner();
   } catch (e) {
     await logAll?.(e);
     if (e instanceof RevealableError) {
-      await logReasonable?.(e)
+      await logReasonable?.(e);
       return e.toJSON();
     }
     await logUncaught?.(e);
@@ -38,7 +38,7 @@ export const catchError = async (inner: CallableFunction, {
       throw e;
     } else {
       const err = new ServerInternalError();
-      await logUnreasonable?.(e)
+      await logUnreasonable?.(e);
       return err.toJSON();
     }
   }
