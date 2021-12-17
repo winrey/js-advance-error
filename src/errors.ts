@@ -61,6 +61,12 @@ export class NotAllowedObjectError extends AuthError {
   message = 'Need Login Token';
 }
 
+export class NotAllowedDebugError extends AuthError {
+  code = 55;
+  name = 'NotAllowedDebugError';
+  message = 'Not Allowed Debug';
+}
+
 export class ServerError extends RevealableError {
   code = 6;
   name = 'ServerError';
