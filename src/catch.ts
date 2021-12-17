@@ -2,28 +2,32 @@ import { Failure } from './failure';
 import { RevealableError } from './revealable';
 import { ServerInternalError } from './errors';
 
-export type TCatchErrorConfig = {
+export type TCatchErrorConfig<TReturn=unknown> = {
   /** log所有异常 */
-  logAll?: (e: unknown) => Promise<void>;
+  catchAll?: (e: unknown) => Promise<TReturn | void | boolean> | TReturn | void | boolean;
   /** log所有未返回原因的异常 */
-  logUncaught?: (e: unknown) => Promise<void>;
+  logUncaught?: (e: unknown) => Promise<void> | void;
   /** log所有服务器已知错误 */
-  logFailure?: (e: Failure) => Promise<void>;
+  logFailure?: (e: Failure) => Promise<void> | void;
   /** log所有服务器返回原因的错误 */
-  logReasonable?: (e: RevealableError) => Promise<void>;
+  logReasonable?: (e: RevealableError) => Promise<void> | void;
   /** log所有服务器未返回原因的错误 */
-  logUnreasonable?: (e: unknown) => Promise<void>;
+  logUnreasonable?: (e: unknown) => Promise<void> | void;
   throwServerError?: boolean;
 };
 
-export const catchError = async (
+export const catchError = async <TReturn=unknown> (
   inner: CallableFunction,
-  { logAll, logUncaught, logFailure, logReasonable, logUnreasonable, throwServerError }: TCatchErrorConfig = {},
+  { catchAll, logUncaught, logFailure, logReasonable, logUnreasonable, throwServerError }: TCatchErrorConfig<TReturn> = {},
 ) => {
   try {
     return await inner();
   } catch (e) {
-    await logAll?.(e);
+    const cr = await catchAll?.(e);
+    if (cr !== undefined && cr !== false) {
+      // 被钩子拦截
+      return cr;
+    }
     if (e instanceof RevealableError) {
       await logReasonable?.(e);
       return e.toJSON();
