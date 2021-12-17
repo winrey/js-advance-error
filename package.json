@@ -1,6 +1,6 @@
 {
   "name": "adv-err",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "An Advance Error Emitter and Manager, which is friendly for the API node server",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

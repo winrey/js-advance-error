@@ -2,7 +2,7 @@ import { Failure } from './failure';
 import { RevealableError } from './revealable';
 import { ServerInternalError } from './errors';
 
-export type TCatchErrorConfig<TReturn=unknown> = {
+export type TCatchErrorConfig<TReturn = unknown> = {
   /** log所有异常 */
   catchAll?: (e: unknown) => Promise<TReturn | void | boolean> | TReturn | void | boolean;
   /** log所有未返回原因的异常 */
@@ -16,9 +16,16 @@ export type TCatchErrorConfig<TReturn=unknown> = {
   throwServerError?: boolean;
 };
 
-export const catchError = async <TReturn=unknown> (
+export const catchError = async <TReturn = unknown>(
   inner: CallableFunction,
-  { catchAll, logUncaught, logFailure, logReasonable, logUnreasonable, throwServerError }: TCatchErrorConfig<TReturn> = {},
+  {
+    catchAll,
+    logUncaught,
+    logFailure,
+    logReasonable,
+    logUnreasonable,
+    throwServerError,
+  }: TCatchErrorConfig<TReturn> = {},
 ) => {
   try {
     return await inner();
