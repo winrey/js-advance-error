@@ -75,7 +75,7 @@ export class ServerError extends RevealableError {
 
 export class ServerInternalError extends RevealableError {
   code = 61;
-  name = 'ServerError';
+  name = 'ServerInternalError';
   message = 'Server Internal Error';
 }
 
